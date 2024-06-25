@@ -1,0 +1,24 @@
+.inventory-container {
+    padding: 2rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .inventory-container h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .inventory-container ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .inventory-container li {
+    background: #fff;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  }
+  
