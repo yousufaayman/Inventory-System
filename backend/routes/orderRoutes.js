@@ -1,4 +1,3 @@
-// backend/routes/orderRoutes.js
 const express = require('express');
 const { getOrders, addOrder, getOrderTransactions, addTransaction } = require('../controllers/orderController');
 
