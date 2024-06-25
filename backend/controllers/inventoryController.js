@@ -11,12 +11,14 @@ const getInventory = async (req, res) => {
 };
 
 const addInventoryItem = async (req, res) => {
-  const { name, quantity } = req.body;
+  const { name, quantity, threshold } = req.body;
   try {
     const newItem = {
       name,
       quantity,
-      timestamp: new Date()
+      threshold,
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
     const docRef = await db.collection('inventory').add(newItem);
     res.status(201).json({ id: docRef.id, ...newItem });
@@ -25,7 +27,36 @@ const addInventoryItem = async (req, res) => {
   }
 };
 
+const checkInventoryAndSetAlerts = async () => {
+    try {
+      const inventorySnapshot = await db.collection('inventory').get();
+      const alertsRef = db.collection('alerts');
+  
+      inventorySnapshot.forEach(async (doc) => {
+        const item = doc.data();
+        if (item.quantity <= item.threshold) {
+          const alertMessage = `Item ${item.name} has reached its threshold. Quantity: ${item.quantity}`;
+          
+          // Check if alert already exists
+          const existingAlertSnapshot = await alertsRef.where('itemId', '==', doc.id).get();
+          if (existingAlertSnapshot.empty) {
+            await alertsRef.add({
+              itemId: doc.id,
+              message: alertMessage,
+              createdAt: new Date(),
+              status: 'pending',
+            });
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error checking inventory levels:', error);
+    }
+  };
+  
+
 module.exports = {
   getInventory,
   addInventoryItem,
+  checkInventoryAndSetAlerts
 };
